@@ -3,7 +3,6 @@ android {
     QT += androidextras
 }
 
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 win32-msvc*: {
@@ -16,6 +15,8 @@ win32-msvc*: {
     CONFIG += c++11
 }
 
+TARGET = serialtest
+TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -92,15 +93,32 @@ ICON = icon/icon.icns
 # Rules for deployment.
 qnx {
     target.path = /tmp/$${TARGET}/bin
-} else: unix:!android {
-    # if PREFIX is specified, use PREFIX
-    isEmpty(PREFIX): target.path = /opt/$${TARGET}/bin
-    else: target.path = $${PREFIX}/bin
+} else: unix:!macx {
+    serialtest.files += $$_PRO_FILE_PWD_/serialtest
+    serialtest.path = /usr/bin
+    INSTALLS += serialtest
+
+    serialtest_icon.files += ../$$_PRO_FILE_PWD_/src/icon/icon.png
+    serialtest_icon.path = /usr/share/pixmaps/serialtest.png
+    INSTALLS += serialtest_icon
+
+    serialtest_desktop.files += ../$$_PRO_FILE_PWD_/pack/aur/io.github.wh201906.serialtest.desktop
+    serialtest_desktop.path = /usr/share/applications
+    INSTALLS += serialtest_desktop
+
+    serialtest_metainfo.files += ../$$_PRO_FILE_PWD_/pack/aur/io.github.wh201906.serialtest.metainfo.xml
+    serialtest_desktop.path = /usr/share/metainfo
+    INSTALLS += serialtest_metainfo
 }
-!isEmpty(target.path) {
-    INSTALLS += target
-    message(Install path: $${target.path})
-}
+# else: unix:!android {
+#     # if PREFIX is specified, use PREFIX
+#     isEmpty(PREFIX): target.path = /opt/$${TARGET}/bin
+#     else: target.path = $${PREFIX}/bin
+# }
+# !isEmpty(target.path) {
+#     INSTALLS += target
+#     message(Install path: $${target.path})
+# }
 
 # Remember to change version in AndroidManifest.xml
 VERSION = 0.3.5
@@ -165,3 +183,21 @@ exists(qcustomplot.cpp) {
     # no need to worry if /app/lib/ exists or not
     LIBS += -L/app/lib/ -L./ -l$$QCPLIB
 }
+
+# unix:!macx {
+#     serialtest.files += $$_PRO_FILE_PWD_/serialtest
+#     serialtest.path = /usr/bin
+#     INSTALLS += serialtest
+#
+#     serialtest_icon.files += ../$$_PRO_FILE_PWD_/src/icon/icon.png
+#     serialtest_icon.path = /usr/share/pixmaps/serialtest.png
+#     INSTALLS += serialtest_icon
+#
+#     serialtest_desktop.files += ../$$_PRO_FILE_PWD_/pack/aur/io.github.wh201906.serialtest.desktop
+#     serialtest_desktop.path = /usr/share/applications
+#     INSTALLS += serialtest_desktop
+#
+#     serialtest_metainfo.files += ../$$_PRO_FILE_PWD_/pack/aur/io.github.wh201906.serialtest.metainfo.xml
+#     serialtest_desktop.path = /usr/share/metainfo
+#     INSTALLS += serialtest_metainfo
+# }
